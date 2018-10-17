@@ -1,0 +1,53 @@
+1.SELECT student_id_fk,class_code_fk,grade 
+FROM `student_class` 
+ORDER BY student_id_fk;
+
+2.SELECT student_class.student_id_fk,student.name,COUNT(student_class.class_code_fk) AS Total_class
+FROM student_class 
+JOIN student 
+ON student.id = student_class.student_id_fk
+WHERE student_class.end_date <> 'null' AND student.status='passed' AND student_class.grade BETWEEN 50 AND 100
+GROUP BY student_class.student_id_fk
+HAVING Total_class = 10
+
+3.SELECT professor.id,class.class_code ,COUNT(student_class.class_code_fk) AS Total_count
+FROM student_class
+JOIN class  JOIN professor 
+ON student_class.class_code_fk = class.class_code
+AND professor.id = student_class.professor_id_fk
+GROUP BY student_class.class_code_fk,student_class.professor_id_fk
+ORDER BY professor.id,Total_count DESC
+
+4.SELECT student.id,student.name,AVG(student_class.grade),IF(AVG(student_class.grade)>=90,'4.0',
+IF(AVG(student_class.grade)>=80,'3.0',
+IF(AVG(student_class.grade)>=70,'2.0',
+IF(AVG(student_class.grade)>=60,'1.0','0')))) AS GPA
+FROM student 
+JOIN student_class 
+ON student.id = student_class.student_id_fk
+WHERE student_class.end_date <> 'NULL'
+GROUP BY student_class.student_id_fk
+ORDER BY GPA DESC
+
+5.SELECT class.class_code,professor.name AS Professor, 2018-YEAR(student.date_of_birth) AS Student_Age,student.registered_date
+    FROM class 
+    JOIN professor 
+    JOIN student_class
+    JOIN student 
+    ON class.professor_id_fk = professor.id
+    AND student_class.class_code_fk = class.class_code
+    AND student_class.student_id_fk = student.id
+    WHERE student_class.end_date <> 'NULL'
+    AND student.registered_date > DATE_SUB(NOW(), INTERVAL 3 MONTH)
+    ORDER BY student.registered_date DESC
+
+6.SELECT professor.id,professor.name,professor.tenure,professor.department,class.class_code AS Current_class
+    FROM class 
+    JOIN professor 
+    JOIN student_class
+    JOIN student 
+    ON student_class.professor_id_fK = professor.id
+    AND class.class_code = student_class.class_code_fk
+    AND student.id = student_class.student_id_fK
+    WHERE student_class.end_date = 'NULL'
+       GROUP BY professor.department

@@ -1,0 +1,56 @@
+#  phpMyAdmin SQL Dump
+#  version 4.8.3
+#  https://www.phpmyadmin.net/
+#  Host: 127.0.0.1
+#  Generation Time: Oct 16, 2018 at 05:29 AM
+#  Server version: 10.1.36-MariaDB
+#  PHP Version: 7.2.10
+
+# !40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT 
+# !40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS 
+# !40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION 
+# !40101 SET NAMES utf8mb4 
+#  Database: `college_database`
+#  
+#  Table structure for table `class`
+class
+--
+id int(11) pk AUTOINCREMENT
+class_code string(7)
+name string(60)
+description string(150)
+professor_id_fk int(11) fk - professor.id
+
+
+#  
+#  Table structure for table `professor`
+professor
+--
+id int(11) pk AUTOINCREMENT
+name string(60)
+department enum('science','humanities','music','journalism','history','medicine')
+tenure tinyint(1)
+joining_date date
+
+#  
+#  Table structure for table `student`
+student
+--
+id int(11) pk AUTOINCREMENT
+name string(60)
+date_of_birth date
+registered_date timestamp DEFAULT=CURRENT_TIMESTAMP
+status enum('current','waiting','passed','failed')
+
+#  
+#  Table structure for table `student_class`
+student_class
+--
+id int(11) pk AUTOINCREMENT
+class_code_fk string(7) fk >- student.id
+professor_id_fk int(11) fk >- class.class_code
+student_id_fk int(11) fk >- professor.id
+grade int(3)
+start_date date
+end_date date
+
